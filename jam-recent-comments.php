@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: JAM Recent Comments
-Plugin URI: http://joshmccarty.com 
+Plugin URI: http://joshmccarty.com
 Description: Adds a widget that displays recent comments including a gravatar and a comment excerpt.
 Version: 0.1
 Author: Josh McCarty
@@ -9,10 +9,10 @@ Author URI: http://joshmccarty.com
 License: GPL v2
 */
 
-/*  Copyright YEAR  PLUGIN_AUTHOR_NAME  (email : PLUGIN AUTHOR EMAIL)
+/*  Copyright 2012 Josh McCarty  (email : josh@joshmccarty.com)
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2, as 
+    it under the terms of the GNU General Public License, version 2, as
     published by the Free Software Foundation.
 
     This program is distributed in the hope that it will be useful,
@@ -25,32 +25,35 @@ License: GPL v2
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+// Enable internationalization
+load_plugin_textdomain( 'jam-recent-comments', false, basename( dirname( __FILE__ ) ) . '/languages' );
+
 class JAM_Recent_Comments extends WP_Widget {
-    
+
     /**
-     * Register widget with WordPress 
+     * Register widget with WordPress
      */
     public function __construct() {
         parent::__construct(
             'jam_recent_comments', //Base ID
             'JAM Recent Comments', //Name
-            array( 'description' => __( 'Displays recent comments including a gravatar and excerpt', 'jam-recent-comments-widget' ), ) //Args
+            array( 'description' => __( 'Displays recent comments including a gravatar and excerpt', 'jam-recent-comments' ), ) //Args
         );
     }
-    
+
     /**
      *Front-end display of widget
-     * 
+     *
      * @see WP_Widget::widget()
-     * 
+     *
      * @param array $args   Widget arguments
-     * @param array $instance   Saved values from database. 
+     * @param array $instance   Saved values from database.
      */
     public function widget( $args, $instance ) {
         extract( $args );
         $title = apply_filters( 'widget-title', $instance['title'] );
         $count = $instance['count'];
-        
+
         echo $before_widget;
         if ( ! empty( $title ) )
             echo $before_title . $title . $after_title; ?>
@@ -75,7 +78,7 @@ class JAM_Recent_Comments extends WP_Widget {
                     <span class="jam-recent-comment-meta"><time pubdate="pubdate" datetime="<?php echo( $comment -> comment_date_gmt ); ?>"><?php comment_date( 'M j, Y', $comment -> comment_ID ); ?></time></span>
                 </div>
                 <div class="jam-recent-comment-post-title">
-                    <a href="<?php echo $jam_recent_comment_post_permalink; ?>" title="<?php _e( 'Read &ldquo;', 'jam-recent-comments-widget' ); echo $jam_recent_comment_post_title; _e( '&rdquo;', 'jam-recent-comments-widget' ); ?>"><?php echo $jam_recent_comment_post_title; ?></a>
+                    <a href="<?php echo $jam_recent_comment_post_permalink; ?>" title="<?php _e( 'Read &ldquo;', 'jam-recent-comments' ); echo $jam_recent_comment_post_title; _e( '&rdquo;', 'jam-recent-comments' ); ?>"><?php echo $jam_recent_comment_post_title; ?></a>
                 </div>
                 <div class="jam-recent-comment-content">
                     <?php comment_excerpt( $comment -> comment_ID ); ?>
@@ -85,28 +88,28 @@ class JAM_Recent_Comments extends WP_Widget {
         ?></div><?php
         echo $after_widget;
     }
-    
+
     /**
      * Sanitize widget form values as they are saved
-     * 
+     *
      * @see WP_Widget::update()
-     * 
+     *
      * @param type $new_instance    Values just sent to be saved.
      * @param type $old_instance    Previously saved values from database.
-     * 
+     *
      * @return array    Updated safe values to be saved.
      */
     public function update( $new_instance, $old_instance ) {
         $instance = array();
         $instance['title'] = strip_tags( $new_instance['title'] );
         $instance['count'] = absint( $new_instance['count'] );
-        
+
         return $instance;
     }
-    
+
     /**
      * @see WP_Widget::form()
-     * 
+     *
      * @param array $instance   Previously saved values from database
      */
     public function form( $instance ) {
@@ -114,7 +117,7 @@ class JAM_Recent_Comments extends WP_Widget {
             $title = $instance['title'];
         }
         else {
-            $title = __( 'Recent Comments', 'jam-recent-comments-widget' );
+            $title = __( 'Recent Comments', 'jam-recent-comments' );
         }
         if ( isset( $instance['count'] ) ) {
             $count = $instance['count'];
@@ -124,11 +127,11 @@ class JAM_Recent_Comments extends WP_Widget {
         }
         ?>
         <p>
-            <label for="<?php echo $this -> get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'jam-recent-comments-widget' ); ?></label>
+            <label for="<?php echo $this -> get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'jam-recent-comments' ); ?></label>
             <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
         </p>
         <p>
-            <label for="<?php echo $this -> get_field_id( 'count' ); ?>"><?php _e( 'Number of Comments:', 'jam-recent-comments-widget' ); ?></label>
+            <label for="<?php echo $this -> get_field_id( 'count' ); ?>"><?php _e( 'Number of Comments:', 'jam-recent-comments' ); ?></label>
             <input id="<?php echo $this->get_field_id( 'count' ); ?>" name="<?php echo $this->get_field_name( 'count' ); ?>" type="number" value="<?php echo esc_attr( $count ); ?>" />
         </p>
         <?php
@@ -137,9 +140,6 @@ class JAM_Recent_Comments extends WP_Widget {
 
 // register JAM_Recent_Comments widget
 add_action( 'widgets_init', create_function( '', 'register_widget( "jam_recent_comments" );' ) );
-
-// Enable internationalization
-load_plugin_textdomain( 'jam-recent-comments-widget', false, basename( dirname( __FILE__ ) ) . '/languages' );
 
 // Embed CSS for the widget
 function jam_recent_comments_styles() {
