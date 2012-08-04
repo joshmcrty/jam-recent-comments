@@ -6,7 +6,7 @@ Tested up to: 3.4.1
 Stable tag: 1.0
 License: GPLv2
 
-JAM Recent Comments creates a simple recent comments widget that displays the commenter's gravatar and a comment excerpt.
+A simple recent comments widget that displays the commenter's gravatar and a comment excerpt.
 
 == Description ==
 
